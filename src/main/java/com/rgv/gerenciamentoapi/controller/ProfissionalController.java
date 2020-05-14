@@ -16,59 +16,59 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rgv.gerenciamentoapi.controller.assembler.ProfissionalInputDisassembler;
-import com.rgv.gerenciamentoapi.controller.assembler.ProfissionalModelAssembler;
-import com.rgv.gerenciamentoapi.controller.model.ProfissionalModel;
-import com.rgv.gerenciamentoapi.controller.model.input.ProfissionalInput;
-import com.rgv.gerenciamentoapi.model.Profissional;
-import com.rgv.gerenciamentoapi.repository.ProfissionalRepository;
-import com.rgv.gerenciamentoapi.service.ProfissionalService;
+import com.rgv.gerenciamentoapi.controller.assembler.EstabelecimentoInputDisassembler;
+import com.rgv.gerenciamentoapi.controller.assembler.EstabelecimentoModelAssembler;
+import com.rgv.gerenciamentoapi.controller.model.EstabelecimentoModel;
+import com.rgv.gerenciamentoapi.controller.model.input.EstabelecimentoInput;
+import com.rgv.gerenciamentoapi.model.Estabelecimento;
+import com.rgv.gerenciamentoapi.repository.EstabelecimentoRepository;
+import com.rgv.gerenciamentoapi.service.EstabelecimentoService;
 
 @RestController
-@RequestMapping("/profissionais")
+@RequestMapping("/estabelecimentos")
 public class ProfissionalController {
 
 	@Autowired
-	private ProfissionalRepository profissionalRepository;
+	private EstabelecimentoRepository estabelecimentoRepository;
 
 	@Autowired
-	private ProfissionalService profissionalService;
+	private EstabelecimentoService estabelecimentoService;
 
 	@Autowired
-	private ProfissionalModelAssembler profissionalModelAssembler;
+	private EstabelecimentoModelAssembler estabelecimentoModelAssembler;
 
 	@Autowired
-	private ProfissionalInputDisassembler profissionalInputDisassembler;
+	private EstabelecimentoInputDisassembler estabelecimentoInputDisassembler;
 
 	@GetMapping
-	public List<ProfissionalModel> listar() {
-		return profissionalModelAssembler.toCollectionModel(profissionalRepository.findAll());
+	public List<EstabelecimentoModel> listar() {
+		return estabelecimentoModelAssembler.toCollectionModel(estabelecimentoRepository.findAll());
 	}
 
-	@GetMapping("/{profissionalId}")
-	public ProfissionalModel buscar(@PathVariable Long profissionalId) {
-		return profissionalModelAssembler.toModel(profissionalService.getOrFail(profissionalId));
+	@GetMapping("/{estabelecimentoId}")
+	public EstabelecimentoModel buscar(@PathVariable Long estabelecimentoId) {
+		return estabelecimentoModelAssembler.toModel(estabelecimentoService.getOrFail(estabelecimentoId));
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ProfissionalModel adicionar(@RequestBody @Valid ProfissionalInput profissionalInput) {
-		Profissional profissional = profissionalInputDisassembler.toDomainObject(profissionalInput);
-		return profissionalModelAssembler.toModel(profissionalService.salvar(profissional));
+	public EstabelecimentoModel adicionar(@RequestBody @Valid EstabelecimentoInput estabelecimentoInput) {
+		Estabelecimento estabelecimento = estabelecimentoInputDisassembler.toDomainObject(estabelecimentoInput);
+		return estabelecimentoModelAssembler.toModel(estabelecimentoService.salvar(estabelecimento));
 	}
 
-	@PutMapping("/{profissionalId}")
-	public ProfissionalModel atualizar(@PathVariable Long profissionalId,
-			@RequestBody @Valid ProfissionalInput profissionalInput) {
-		Profissional profissionalAtual = profissionalService.getOrFail(profissionalId);
-		profissionalInputDisassembler.copyToDomainObject(profissionalInput, profissionalAtual);
-		return profissionalModelAssembler.toModel(profissionalService.salvar(profissionalAtual));
+	@PutMapping("/{estabelecimentoId}")
+	public EstabelecimentoModel atualizar(@PathVariable Long estabelecimentoId,
+			@RequestBody @Valid EstabelecimentoInput estabelecimentoInput) {
+		Estabelecimento estabelecimentoAtual = estabelecimentoService.getOrFail(estabelecimentoId);
+		estabelecimentoInputDisassembler.copyToDomainObject(estabelecimentoInput, estabelecimentoAtual);
+		return estabelecimentoModelAssembler.toModel(estabelecimentoService.salvar(estabelecimentoAtual));
 	}
 
-	@DeleteMapping("/{profissionalId}")
+	@DeleteMapping("/{estabelecimentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@PathVariable Long profissionalId) {
-		profissionalService.excluir(profissionalId);
+	public void remover(@PathVariable Long estabelecimentoId) {
+		estabelecimentoService.excluir(estabelecimentoId);
 	}
 
 }

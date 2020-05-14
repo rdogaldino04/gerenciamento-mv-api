@@ -9,7 +9,7 @@ public class ProfissionalNaoEncontradaException extends EntidadeNaoEncontradaExc
 	}
 	
 	public ProfissionalNaoEncontradaException(Long cozinhaId) {
-		this(String.format("Não existe um cadastro de usuário com código %d", cozinhaId));
+		this(String.format("Não existe um cadastro de profissional com código %d", cozinhaId));
 	}
 	
 }
