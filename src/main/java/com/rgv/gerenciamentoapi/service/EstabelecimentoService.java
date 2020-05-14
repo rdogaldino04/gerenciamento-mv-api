@@ -10,6 +10,7 @@ import com.rgv.gerenciamentoapi.model.Estabelecimento;
 import com.rgv.gerenciamentoapi.model.Profissional;
 import com.rgv.gerenciamentoapi.model.exception.EntidadeEmUsoException;
 import com.rgv.gerenciamentoapi.model.exception.EstabelecimentoNaoEncontradaException;
+import com.rgv.gerenciamentoapi.model.exception.NegocioException;
 import com.rgv.gerenciamentoapi.model.exception.ProfissionalNaoEncontradaException;
 import com.rgv.gerenciamentoapi.repository.EstabelecimentoRepository;
 
@@ -17,6 +18,9 @@ import com.rgv.gerenciamentoapi.repository.EstabelecimentoRepository;
 public class EstabelecimentoService {
 	
 	private static final String MSG_ESTADO_EM_USO = "Estabelecimento de código %d não pode ser removido, pois está em uso";
+	
+	private static final String MSG_PROFISSIONAL_JA_PERTENCENTE_ESTABELECIMENTO = 
+			"Profissional de código %d não pode ser vinculado, pois está já pertence a outro estabelecimento";
 	
 	@Autowired
 	private EstabelecimentoRepository estabelecimentoRepository;
@@ -51,10 +55,14 @@ public class EstabelecimentoService {
 	}
 	
 	@Transactional
-	public void associarPermissao(Long estabelecimentoId, Long profissionalId) {
-		Estabelecimento estabelecimento = getOrFail(estabelecimentoId);
-		Profissional profissional = profissionalService.getOrFail(profissionalId);
+	public void associarPermissao(Long estabelecimentoId, Long profissionalId) {	
+		Long total = estabelecimentoRepository.findTotalProfissional(profissionalId);
+		if (total > 0) {
+			throw new NegocioException(String.format(MSG_PROFISSIONAL_JA_PERTENCENTE_ESTABELECIMENTO, profissionalId));
+		}
 		
+		Estabelecimento estabelecimento = getOrFail(estabelecimentoId);
+		Profissional profissional = profissionalService.getOrFail(profissionalId);		
 		estabelecimento.adicionarProfissional(profissional);
 	}
 	
