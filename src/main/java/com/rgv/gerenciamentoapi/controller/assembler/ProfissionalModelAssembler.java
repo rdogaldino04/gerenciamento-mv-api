@@ -1,5 +1,6 @@
 package com.rgv.gerenciamentoapi.controller.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class ProfissionalModelAssembler {
 		return modelMapper.map(profissional, ProfissionalModel.class);
 	}
 	
-	public List<ProfissionalModel> toCollectionModel(List<Profissional> profissionais) {
+	public List<ProfissionalModel> toCollectionModel(Collection<Profissional> profissionais) {
 		return profissionais.stream()
 				.map(prof -> toModel(prof))
 				.collect(Collectors.toList());
